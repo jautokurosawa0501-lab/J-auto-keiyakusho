@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="J-AUTO 買取契約書">
+<meta name="theme-color" content="#16294d">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>J-AUTO 車両買取契約書</title>
 <style>
 :root{
@@ -120,46 +126,52 @@ textarea{resize:vertical; min-height:64px;}
   body{background:#fff;}
   .app,.bar,.panel,#toast{display:none !important;}
   #printSheet{display:block; font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
-    color:#000; font-size:8.3px; line-height:1.36; width:100%; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
-  .ph{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.1mm;}
-  .ph .no{font-size:8.6px; border-bottom:1px solid #000; min-width:34mm; padding:0 1mm .5mm;}
-  .ph .ttl{font-size:14px; font-weight:700; letter-spacing:.4em; text-align:center;}
-  .ph .r{text-align:right; font-size:8.6px;}
+    color:#000; font-size:8.5px; line-height:1.32; width:100%; overflow:hidden;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  #printSheet *{box-sizing:border-box;}
+  .ph{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.1mm; gap:2mm;}
+  .ph .no{font-size:8.2px; border-bottom:1px solid #000; min-width:28mm; padding:0 1mm .5mm;}
+  .ph .ttl{font-size:14px; font-weight:700; letter-spacing:.35em; text-align:center; white-space:nowrap;}
+  .ph .r{text-align:right; font-size:8.2px; white-space:nowrap;}
   .ph .r div{margin-bottom:.6mm;}
   .amtbox{display:flex; border:1.5px solid #000; margin-bottom:1.2mm; align-items:stretch;}
   .amtbox .al{background:#e9e9e9; padding:1mm 2.5mm; font-size:9.5px; font-weight:700;
-    letter-spacing:.5em; display:flex; align-items:center; border-right:1.2px solid #000;}
-  .amtbox .av{flex:1; display:flex; align-items:center; justify-content:flex-end;
-    font-size:15px; font-weight:700; padding:0 3mm; font-variant-numeric:tabular-nums;}
-  .amtbox .an{display:flex; align-items:flex-end; font-size:7.6px; padding:0 1.5mm 1mm 0;}
+    letter-spacing:.4em; display:flex; align-items:center; border-right:1.2px solid #000; white-space:nowrap;}
+  .amtbox .av{flex:1 1 auto; min-width:0; display:flex; align-items:center; justify-content:flex-end;
+    font-size:17px; font-weight:700; padding:0 3mm; font-variant-numeric:tabular-nums;}
+  .amtbox .an{display:flex; align-items:flex-end; font-size:7.4px; padding:0 1.5mm 1mm 0; white-space:nowrap;}
   .cols{display:flex; gap:1.6mm; align-items:flex-start;}
-  .col{flex:1 1 50%; min-width:0;}
-  .sec-p{border:1px solid #000; margin-bottom:1.2mm; break-inside:avoid; page-break-inside:avoid;}
-  .sec-p .sh{background:#e9e9e9; font-weight:700; padding:.5mm 1.4mm; font-size:8.5px;
-    border-bottom:1px solid #000; display:flex; justify-content:space-between; align-items:center;}
-  .sec-p .sh .shr{font-weight:400; font-size:7.8px;}
-  .pr{display:flex; border-bottom:1px solid #888; min-height:4.1mm; align-items:stretch;}
+  .col{flex:1 1 0; width:50%; max-width:50%; min-width:0; overflow:hidden;}
+  .sec-p{border:1px solid #000; margin-bottom:1mm; overflow:hidden;
+    break-inside:avoid; page-break-inside:avoid;}
+  .sec-p .sh{background:#e9e9e9; font-weight:700; padding:.6mm 1.4mm; font-size:8.7px;
+    border-bottom:1px solid #000; display:flex; justify-content:space-between; align-items:center; gap:1mm;}
+  .sec-p .sh .shr{font-weight:400; font-size:7.2px; white-space:nowrap;}
+  .pr{display:flex; border-bottom:1px solid #888; min-height:4mm; align-items:stretch;}
   .pr:last-child{border-bottom:none;}
-  .pr .lb{background:#f3f3f3; padding:.6mm 1.2mm; font-size:7.8px; display:flex; align-items:center;
-    flex:0 0 auto; border-right:1px solid #aaa; white-space:nowrap;}
-  .pr .vl{padding:.6mm 1.2mm; display:flex; align-items:center; flex:1 1 auto; min-width:0;
-    word-break:break-all;}
-  .pr .vl.num{justify-content:flex-end; font-variant-numeric:tabular-nums;}
+  .pr .lb{background:#f3f3f3; padding:.45mm 1mm; font-size:7.8px; display:flex; align-items:center;
+    flex:0 0 auto; border-right:1px solid #aaa; white-space:nowrap; overflow:hidden;}
+  .pr .vl{padding:.45mm 1mm; display:flex; align-items:center; flex-wrap:wrap;
+    flex:1 1 auto; min-width:0; overflow:hidden; overflow-wrap:anywhere;}
+  .pr .vl.num{justify-content:flex-end; font-variant-numeric:tabular-nums; flex-wrap:nowrap;}
   .pr .sep{border-right:1px solid #aaa;}
-  .subhead{background:#f3f3f3; font-size:7.6px; padding:.5mm 1.2mm; border-bottom:1px solid #888;}
-  .mk{display:inline-block; padding:0 1.4mm; margin:0 .4mm; color:#666; border:1px solid transparent;}
-  .mk.on{color:#000; font-weight:700; border:1.3px solid #000; border-radius:99px;}
-  .noteline{padding:.6mm 1.4mm; font-size:7.2px; line-height:1.4;}
-  .memoarea{min-height:6mm; padding:.7mm 1.4mm; white-space:pre-wrap;}
-  .sigbox{display:flex; border:1px solid #000; min-height:14mm; break-inside:avoid; page-break-inside:avoid;}
+  .subhead{background:#f3f3f3; font-size:7.3px; padding:.45mm 1.2mm; border-bottom:1px solid #888;}
+  .mkg{display:inline; min-width:0;}
+  .mk{display:inline-block; padding:0 .9mm; margin:0 .2mm; color:#666;
+    border:1px solid transparent; white-space:nowrap;}
+  .mk.on{color:#000; font-weight:700; border:1.2px solid #000; border-radius:99px;}
+  .noteline{padding:.7mm 1.4mm; font-size:7.3px; line-height:1.45; overflow-wrap:anywhere;}
+  .memoarea{min-height:9mm; padding:.8mm 1.4mm; white-space:pre-wrap; overflow-wrap:anywhere;}
+  .sigbox{display:flex; border:1px solid #000; min-height:16mm; overflow:hidden;
+    break-inside:avoid; page-break-inside:avoid;}
   .sigbox .sl{background:#e9e9e9; writing-mode:vertical-rl; text-align:center; padding:1mm .8mm;
-    font-size:8.6px; font-weight:700; border-right:1px solid #000; letter-spacing:.3em;}
-  .sigbox .sv{flex:1; display:flex; align-items:center; padding:1mm 2mm; position:relative;}
-  .sigbox .sv img{max-height:14mm; max-width:70%;}
+    font-size:8.4px; font-weight:700; border-right:1px solid #000; letter-spacing:.3em;}
+  .sigbox .sv{flex:1 1 auto; min-width:0; display:flex; align-items:center; padding:1mm 2mm; position:relative;}
+  .sigbox .sv img{max-height:15mm; max-width:68%;}
   .sigbox .in{position:absolute; right:3mm; top:50%; transform:translateY(-50%);
     width:7mm; height:7mm; border:1px solid #999; border-radius:99px; color:#999;
     display:flex; align-items:center; justify-content:center; font-size:7px;}
-  .buyer{padding:.7mm 1.4mm; font-size:7.8px; line-height:1.5;}
+  .buyer{padding:.8mm 1.4mm; font-size:7.9px; line-height:1.55; overflow-wrap:anywhere;}
   .buyer .bn{font-size:11px; font-weight:700; letter-spacing:.2em;}
 }
 </style>
@@ -510,7 +522,7 @@ textarea{resize:vertical; min-height:64px;}
     <div class="ttl">車両買取契約書</div>
     <div class="r">
       <div>契約日　<span id="p_contractDate"></span></div>
-      <div>顧客No.　<span id="p_customerNo" style="border-bottom:1px solid #000; display:inline-block; min-width:22mm;">&nbsp;</span></div>
+      <div>顧客No.　<span id="p_customerNo" style="border-bottom:1px solid #000; display:inline-block; min-width:20mm;">&nbsp;</span></div>
     </div>
   </div>
 
@@ -525,51 +537,55 @@ textarea{resize:vertical; min-height:64px;}
     <div class="col">
       <div class="sec-p">
         <div class="sh"><span>◼︎お客様</span><span class="shr">登録番号：T5810407776105</span></div>
-        <div class="pr"><div class="lb" style="width:16mm">フリガナ</div><div class="vl" id="p_kanaName"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">お名前</div><div class="vl" id="p_name"></div><div class="lb sep" style="border-left:1px solid #aaa">生</div><div class="vl" id="p_birth" style="flex:0 0 17mm"></div><div class="vl num" id="p_age" style="flex:0 0 9mm"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">住所</div><div class="vl" id="p_address"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">自宅TEL</div><div class="vl sep" id="p_telHome"></div><div class="lb">携帯</div><div class="vl" id="p_telMobile"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">免許証番号</div><div class="vl sep" id="p_license"></div><div class="lb">職業</div><div class="vl" id="p_job"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">勤務先</div><div class="vl sep" id="p_employer"></div><div class="lb">TEL</div><div class="vl" id="p_telWork"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">部署</div><div class="vl sep" id="p_dept"></div><div class="lb">役職</div><div class="vl" id="p_position"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">フリガナ</div><div class="vl" id="p_kanaName"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">お名前</div><div class="vl" id="p_name"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">生年月日</div><div class="vl sep" id="p_birth"></div><div class="lb">年齢</div><div class="vl" id="p_age" style="flex:0 0 13mm"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">住所</div><div class="vl" id="p_address"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">自宅TEL</div><div class="vl sep" id="p_telHome"></div><div class="lb">携帯</div><div class="vl" id="p_telMobile"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">免許証番号</div><div class="vl sep" id="p_license"></div><div class="lb">職業</div><div class="vl" id="p_job"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">勤務先</div><div class="vl sep" id="p_employer"></div><div class="lb">TEL</div><div class="vl" id="p_telWork"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">部署</div><div class="vl sep" id="p_dept"></div><div class="lb">役職</div><div class="vl" id="p_position"></div></div>
         <div class="subhead">所有者（※売主と所有者が異なる場合に記載）</div>
-        <div class="pr"><div class="lb" style="width:16mm">所有者</div><div class="vl sep" id="p_ownerName"></div><div class="lb">売主との関係</div><div class="vl" id="p_ownerRel"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">住所</div><div class="vl" id="p_ownerAddr"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">所有者</div><div class="vl sep" id="p_ownerName"></div><div class="lb">続柄</div><div class="vl" id="p_ownerRel" style="flex:0 0 20mm"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">住所</div><div class="vl" id="p_ownerAddr"></div></div>
         <div class="subhead">使用者（※売主と使用者が異なる場合に記載）</div>
-        <div class="pr"><div class="lb" style="width:16mm">使用者</div><div class="vl" id="p_userName"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">住所</div><div class="vl" id="p_userAddr"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">使用者</div><div class="vl" id="p_userName"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">住所</div><div class="vl" id="p_userAddr"></div></div>
       </div>
 
       <div class="sec-p">
         <div class="sh"><span>◼︎お支払先銀行口座</span></div>
-        <div class="pr"><div class="vl sep" id="p_bankName" style="flex:1"></div><div class="vl" id="p_bankTypeMarks" style="flex:0 0 auto"></div></div>
-        <div class="pr"><div class="vl sep" id="p_branch" style="flex:1"></div><div class="lb">支店コード</div><div class="vl" id="p_branchCode" style="flex:0 0 16mm"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">金融機関</div><div class="vl" id="p_bankName"></div></div>
+        <div class="pr"><div class="vl" id="p_bankTypeMarks" style="font-size:7.2px"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">支店</div><div class="vl sep" id="p_branch"></div><div class="lb">支店コード</div><div class="vl" id="p_branchCode" style="flex:0 0 15mm"></div></div>
         <div class="pr"><div class="vl sep" id="p_acctTypeMarks" style="flex:0 0 auto"></div><div class="lb">口座番号</div><div class="vl" id="p_acctNo"></div></div>
-        <div class="pr"><div class="lb" style="width:30mm">ゆうちょ通帳記号</div><div class="vl" id="p_yuchoMark"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">フリガナ</div><div class="vl" id="p_acctKana"></div></div>
-        <div class="pr"><div class="lb" style="width:16mm">口座名義人</div><div class="vl" id="p_acctHolder"></div></div>
+        <div class="pr"><div class="lb" style="width:27mm">ゆうちょ通帳記号</div><div class="vl" id="p_yuchoMark"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">フリガナ</div><div class="vl" id="p_acctKana"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">口座名義人</div><div class="vl" id="p_acctHolder"></div></div>
       </div>
 
       <div class="sec-p">
         <div class="sh"><span>◼︎ご売却車両装備</span></div>
-        <div class="pr"><div class="lb" style="width:20mm">オーディオ</div><div class="vl sep" id="p_eqAudio"></div><div class="lb">アルミホイール</div><div class="vl" id="p_eqWheel"></div></div>
+        <div class="pr"><div class="lb" style="width:21mm">オーディオ</div><div class="vl" id="p_eqAudio"></div></div>
+        <div class="pr"><div class="lb" style="width:21mm">アルミホイール</div><div class="vl" id="p_eqWheel"></div></div>
+        <div class="pr"><div class="lb" style="width:21mm">ナビ/TV</div><div class="vl sep" id="p_eqNavi" style="flex:0 0 auto"></div><div class="vl" id="p_naviNote"></div></div>
         <div class="pr"><div class="vl" id="p_eqItems"></div></div>
-        <div class="pr"><div class="lb" style="width:20mm">ナビ/TV</div><div class="vl sep" id="p_eqNavi" style="flex:0 0 auto"></div><div class="vl" id="p_naviNote"></div></div>
-        <div class="pr"><div class="lb" style="width:24mm">リサイクル料金</div><div class="vl" id="p_recycleStatus"></div></div>
+        <div class="pr"><div class="lb" style="width:25mm">リサイクル料金</div><div class="vl" id="p_recycleStatus"></div></div>
         <div class="noteline">（別途、「リサイクル券」または「通知書」にて確認させていただきます。）</div>
       </div>
 
       <div class="sec-p">
         <div class="sh"><span>◼︎ご確認事項</span></div>
         <div class="pr"><div class="lb" style="width:36mm">駐車違反放置/違反金未納</div><div class="vl" id="p_cfParking"></div></div>
-        <div class="pr"><div class="lb" style="width:36mm">走行メーター巻き戻し</div><div class="vl sep" id="p_cfMeterRollback" style="flex:0 0 auto"></div><div class="lb">メーター交換</div><div class="vl" id="p_cfMeterSwap"></div></div>
-        <div class="pr"><div class="lb" style="width:19mm">不具合箇所</div><div class="vl" id="p_cfDefect"></div></div>
-        <div class="pr"><div class="lb" style="width:19mm">冠水歴</div><div class="vl sep" id="p_cfFlood" style="flex:0 0 auto"></div><div class="lb">ヒョウ害歴</div><div class="vl" id="p_cfHail"></div></div>
-        <div class="pr"><div class="lb" style="width:19mm">修復歴</div><div class="vl sep" id="p_cfRepair" style="flex:0 0 auto"></div><div class="lb">改造歴</div><div class="vl" id="p_cfModify"></div></div>
+        <div class="pr"><div class="lb" style="width:36mm">走行メーター巻き戻し</div><div class="vl" id="p_cfMeterRollback"></div></div>
+        <div class="pr"><div class="lb" style="width:36mm">走行メーター交換</div><div class="vl" id="p_cfMeterSwap"></div></div>
+        <div class="pr"><div class="lb" style="width:20mm">冠水歴</div><div class="vl sep" id="p_cfFlood"></div><div class="lb">ヒョウ害歴</div><div class="vl" id="p_cfHail"></div></div>
+        <div class="pr"><div class="lb" style="width:20mm">修復歴</div><div class="vl sep" id="p_cfRepair"></div><div class="lb">改造歴</div><div class="vl" id="p_cfModify"></div></div>
+        <div class="pr"><div class="lb" style="width:20mm">不具合箇所</div><div class="vl" id="p_cfDefect"></div></div>
         <div class="subhead">契約金額に</div>
-        <div class="pr"><div class="lb" style="width:44mm">自動車税未経過分相当額を</div><div class="vl" id="p_incAutoTax"></div></div>
-        <div class="pr"><div class="lb" style="width:44mm">自賠責保険未経過相当額を</div><div class="vl" id="p_incJibaiseki"></div></div>
-        <div class="pr"><div class="lb" style="width:44mm">永久抹消登録時、重量税還付金を</div><div class="vl" id="p_incWeightTax"></div></div>
+        <div class="pr"><div class="lb" style="width:42mm">自動車税未経過分相当額を</div><div class="vl" id="p_incAutoTax"></div></div>
+        <div class="pr"><div class="lb" style="width:42mm">自賠責保険未経過相当額を</div><div class="vl" id="p_incJibaiseki"></div></div>
+        <div class="pr"><div class="lb" style="width:42mm">永久抹消時、重量税還付金を</div><div class="vl" id="p_incWeightTax"></div></div>
       </div>
 
       <div class="sec-p">
@@ -582,30 +598,33 @@ textarea{resize:vertical; min-height:64px;}
     <div class="col">
       <div class="sec-p">
         <div class="sh"><span>◼︎ご売却車両</span></div>
-        <div class="pr"><div class="lb" style="width:15mm">メーカー</div><div class="vl sep" id="p_maker"></div><div class="lb">車名</div><div class="vl sep" id="p_car"></div><div class="lb">排気量</div><div class="vl" id="p_cc" style="flex:0 0 14mm"></div></div>
-        <div class="pr"><div class="lb" style="width:15mm">グレード</div><div class="vl sep" id="p_grade"></div><div class="lb">初度登録</div><div class="vl sep" id="p_firstReg" style="flex:0 0 17mm"></div><div class="lb">車検期限</div><div class="vl" id="p_shaken" style="flex:0 0 17mm"></div></div>
-        <div class="pr"><div class="lb" style="width:15mm">走行距離</div><div class="vl sep num" id="p_km"></div><div class="lb">色</div><div class="vl sep" id="p_color"></div><div class="lb">型式</div><div class="vl" id="p_katashiki" style="flex:0 0 22mm"></div></div>
-        <div class="pr"><div class="lb" style="width:24mm">型式指定番号</div><div class="vl sep" id="p_typeNo"></div><div class="lb">類別区分番号</div><div class="vl" id="p_ruibetsu"></div></div>
-        <div class="pr"><div class="lb" style="width:15mm">登録番号</div><div class="vl" id="p_regNo"></div></div>
-        <div class="pr"><div class="lb" style="width:15mm">車台番号</div><div class="vl" id="p_frameNo"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">メーカー</div><div class="vl sep" id="p_maker"></div><div class="lb">車名</div><div class="vl" id="p_car"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">グレード</div><div class="vl sep" id="p_grade"></div><div class="lb">排気量</div><div class="vl" id="p_cc" style="flex:0 0 16mm"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">初度登録</div><div class="vl sep" id="p_firstReg"></div><div class="lb">車検期限</div><div class="vl" id="p_shaken"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">走行距離</div><div class="vl sep num" id="p_km"></div><div class="lb">色</div><div class="vl" id="p_color"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">型式</div><div class="vl sep" id="p_katashiki"></div><div class="lb">型式指定番号</div><div class="vl" id="p_typeNo" style="flex:0 0 16mm"></div></div>
+        <div class="pr"><div class="lb" style="width:24mm">類別区分番号</div><div class="vl" id="p_ruibetsu"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">登録番号</div><div class="vl" id="p_regNo"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">車台番号</div><div class="vl" id="p_frameNo"></div></div>
       </div>
 
       <div class="sec-p">
         <div class="sh"><span>◼︎お支払明細</span></div>
-        <div class="pr"><div class="lb" style="width:32mm">契約金額</div><div class="vl num" id="pp_amount"></div></div>
-        <div class="pr"><div class="lb" style="width:32mm">預り自動車税</div><div class="vl num" id="pp_tax"></div></div>
-        <div class="pr"><div class="lb" style="width:32mm">残債（明細は別紙）</div><div class="vl num" id="pp_zansai"></div></div>
-        <div class="pr"><div class="lb" style="width:32mm">前払金</div><div class="vl num" id="pp_maebarai"></div></div>
-        <div class="pr"><div class="lb" style="width:32mm">下取充当額</div><div class="vl num" id="pp_shitadori"></div></div>
-        <div class="pr"><div class="lb" style="width:32mm">リース充当額</div><div class="vl num" id="pp_lease"></div></div>
-        <div class="pr" style="border-top:1.3px solid #000"><div class="lb" style="width:32mm; font-weight:700">差引残金</div><div class="vl num" id="pp_zankin" style="font-weight:700"></div></div>
-        <div class="pr"><div class="lb" style="width:32mm">リサイクル料金</div><div class="vl num sep" id="pp_recycle"></div><div class="vl" style="flex:0 0 13mm; font-size:7px">（非課税）</div></div>
-        <div class="pr"><div class="lb" style="width:32mm">課税対象額</div><div class="vl num sep" id="pp_taxable"></div><div class="lb">内消費税10%</div><div class="vl num" id="pp_shohizei" style="flex:0 0 17mm"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">契約金額</div><div class="vl num" id="pp_amount"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">預り自動車税</div><div class="vl num" id="pp_tax"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">残債（明細は別紙）</div><div class="vl num" id="pp_zansai"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">前払金</div><div class="vl num" id="pp_maebarai"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">下取充当額</div><div class="vl num" id="pp_shitadori"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">リース充当額</div><div class="vl num" id="pp_lease"></div></div>
+        <div class="pr" style="border-top:1.3px solid #000"><div class="lb" style="width:30mm; font-weight:700">差引残金</div><div class="vl num" id="pp_zankin" style="font-weight:700"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">リサイクル料金</div><div class="vl num sep" id="pp_recycle"></div><div class="vl" style="flex:0 0 12mm; font-size:6.8px">（非課税）</div></div>
+        <div class="pr"><div class="lb" style="width:30mm">課税対象額</div><div class="vl num" id="pp_taxable"></div></div>
+        <div class="pr"><div class="lb" style="width:30mm">内消費税10%</div><div class="vl num" id="pp_shohizei"></div></div>
       </div>
 
       <div class="sec-p">
         <div class="sh"><span>◼︎引渡期限／支払日</span></div>
-        <div class="pr"><div class="lb" style="width:22mm">車両引渡日</div><div class="vl sep" id="p_dateVehicle"></div><div class="vl" id="p_place" style="flex:0 0 auto; font-size:7.4px"></div></div>
+        <div class="pr"><div class="lb" style="width:22mm">車両引渡日</div><div class="vl sep" id="p_dateVehicle"></div><div class="vl" id="p_place" style="flex:0 0 auto; font-size:7px"></div></div>
         <div class="pr"><div class="lb" style="width:22mm">書類引渡日</div><div class="vl" id="p_dateDocs"></div></div>
         <div class="pr"><div class="lb" style="width:22mm">支払日</div><div class="vl" id="p_datePay"></div></div>
       </div>
@@ -857,7 +876,7 @@ $("importFile").addEventListener("change",function(){
 
 /* ── 印刷（PDF） ── */
 function mk(pairs,val){ /* [[value,label],...] を ○囲みで描画 */
-  return pairs.map(function(p){return '<span class="mk'+(p[0]===val&&val?" on":"")+'">'+p[1]+"</span>";}).join("・");
+  return '<span class="mkg">'+pairs.map(function(p){return '<span class="mk'+(p[0]===val&&val?" on":"")+'">'+p[1]+"</span>";}).join("・")+'</span>';
 }
 function fillPrint(){
   var d=getData(),c=calc();
@@ -874,7 +893,7 @@ function fillPrint(){
   T("p_userName",d.userName);T("p_userAddr",d.userAddr);
   T("p_bankName",d.bankName);
   $("p_bankTypeMarks").innerHTML=mk([["bank","銀行"],["shinkin","信用（金庫・組合）"],["yucho","ゆうちょ銀行"]],d.bankType);
-  T("p_branch",d.branch?d.branch+"　支店":"　支店");T("p_branchCode",d.branchCode);
+  T("p_branch",d.branch);T("p_branchCode",d.branchCode);
   $("p_acctTypeMarks").innerHTML=mk([["futsu","普通"],["toza","当座"],["chokin","貯金"]],d.acctType);
   T("p_acctNo",d.acctNo);T("p_yuchoMark",d.yuchoMark);T("p_acctKana",d.acctKana);T("p_acctHolder",d.acctHolder);
   T("p_maker",d.maker);T("p_car",d.car);T("p_cc",d.cc);T("p_grade",d.grade);T("p_firstReg",d.firstReg);T("p_shaken",d.shaken);
@@ -891,8 +910,8 @@ function fillPrint(){
   $("p_eqWheel").innerHTML=mk([["jun","純正"],["sha","社外"]],d.eqWheel);
   $("p_eqNavi").innerHTML=mk([["jun","純正"],["sha","社外"]],d.eqNavi);
   T("p_naviNote",d.naviNote?"（"+d.naviNote+"）":"（　　　　　　　　　　）");
-  $("p_eqItems").innerHTML=[["eqTire","積込タイヤ"],["eqWarranty","保証書"],["eqRecord","整備記録簿"],["eqManual","取扱説明書"],["eqSpareKey","スペアキー"],["eqDrareco","ドラレコ"]]
-    .map(function(p){return '<span class="mk'+(d[p[0]]?" on":"")+'">'+p[1]+"</span>";}).join("・");
+  $("p_eqItems").innerHTML='<span class="mkg">'+[["eqTire","積込タイヤ"],["eqWarranty","保証書"],["eqRecord","整備記録簿"],["eqManual","取扱説明書"],["eqSpareKey","スペアキー"],["eqDrareco","ドラレコ"]]
+    .map(function(p){return '<span class="mk'+(d[p[0]]?" on":"")+'">'+p[1]+"</span>";}).join("・")+'</span>';
   $("p_recycleStatus").innerHTML=mk([["mi","未預託"],["sumi","預託済み"]],d.recycleStatus);
   var an=[["ari","あり"],["nashi","なし"]];
   $("p_cfParking").innerHTML=mk(an,d.cfParking);
