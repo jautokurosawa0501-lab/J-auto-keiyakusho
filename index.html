@@ -123,62 +123,69 @@ textarea{resize:vertical; min-height:64px;}
   border:1px solid var(--gold); white-space:nowrap;}
 #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
 @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
-/* ══════════ 印刷（PDF）レイアウト：Excel契約書を再現 ══════════ */
+/* ══════════ 契約書シート（印刷・PDF共通）：Excel契約書を再現 ══════════ */
 #printSheet{display:none;}
+.ps{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  color:#000; font-size:8.5px; line-height:1.32; width:100%; overflow:hidden; background:#fff;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+.ps *{box-sizing:border-box;}
+.ps .ph{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.1mm; gap:2mm;}
+.ps .ph .no{font-size:8.2px; border-bottom:1px solid #000; min-width:28mm; padding:0 1mm .5mm;}
+.ps .ph .ttl{font-size:14px; font-weight:700; letter-spacing:.35em; text-align:center; white-space:nowrap;}
+.ps .ph .r{text-align:right; font-size:8.2px; white-space:nowrap;}
+.ps .ph .r div{margin-bottom:.6mm;}
+.ps .amtbox{display:flex; border:1.5px solid #000; margin-bottom:1.2mm; align-items:stretch;}
+.ps .amtbox .al{background:#e9e9e9; padding:1mm 2.5mm; font-size:9.5px; font-weight:700;
+    letter-spacing:.4em; display:flex; align-items:center; border-right:1.2px solid #000; white-space:nowrap;}
+.ps .amtbox .av{flex:1 1 auto; min-width:0; display:flex; align-items:center; justify-content:flex-end;
+    font-size:17px; font-weight:700; padding:0 3mm; font-variant-numeric:tabular-nums;}
+.ps .amtbox .an{display:flex; align-items:flex-end; font-size:7.4px; padding:0 1.5mm 1mm 0; white-space:nowrap;}
+.ps .cols{display:flex; gap:1.6mm; align-items:flex-start;}
+.ps .col{flex:1 1 0; width:50%; max-width:50%; min-width:0; overflow:hidden;}
+.ps .sec-p{border:1px solid #000; margin-bottom:1mm; overflow:hidden;
+    break-inside:avoid; page-break-inside:avoid;}
+.ps .sec-p .sh{background:#e9e9e9; font-weight:700; padding:.6mm 1.4mm; font-size:8.7px;
+    border-bottom:1px solid #000; display:flex; justify-content:space-between; align-items:center; gap:1mm;}
+.ps .sec-p .sh .shr{font-weight:400; font-size:7.2px; white-space:nowrap;}
+.ps .pr{display:flex; border-bottom:1px solid #888; min-height:4mm; align-items:stretch;}
+.ps .pr:last-child{border-bottom:none;}
+.ps .pr .lb{background:#f3f3f3; padding:.45mm 1mm; font-size:7.8px; display:flex; align-items:center;
+    flex:0 0 auto; border-right:1px solid #aaa; white-space:nowrap; overflow:hidden;}
+.ps .pr .vl{padding:.45mm 1mm; display:flex; align-items:center; flex-wrap:wrap;
+    flex:1 1 auto; min-width:0; overflow:hidden; overflow-wrap:anywhere;}
+.ps .pr .vl.num{justify-content:flex-end; font-variant-numeric:tabular-nums; flex-wrap:nowrap;}
+.ps .pr .sep{border-right:1px solid #aaa;}
+.ps .subhead{background:#f3f3f3; font-size:7.3px; padding:.45mm 1.2mm; border-bottom:1px solid #888;}
+.ps .mkg{display:inline; min-width:0;}
+.ps .mk{display:inline-block; padding:0 .9mm; margin:0 .2mm; color:#666;
+    border:1px solid transparent; white-space:nowrap;}
+.ps .mk.on{color:#000; font-weight:700; border:1.2px solid #000; border-radius:99px;}
+.ps .noteline{padding:.7mm 1.4mm; font-size:7.3px; line-height:1.45; overflow-wrap:anywhere;}
+.ps .memoarea{min-height:9mm; padding:.8mm 1.4mm; white-space:pre-wrap; overflow-wrap:anywhere;}
+.ps .sigbox{display:flex; border:1px solid #000; min-height:16mm; overflow:hidden;
+    break-inside:avoid; page-break-inside:avoid;}
+.ps .sigbox .sl{background:#e9e9e9; writing-mode:vertical-rl; text-align:center; padding:1mm .8mm;
+    font-size:8.4px; font-weight:700; border-right:1px solid #000; letter-spacing:.3em;}
+.ps .sigbox .sv{flex:1 1 auto; min-width:0; display:flex; align-items:center; padding:1mm 2mm; position:relative;}
+.ps .sigbox .sv img{max-height:15mm; max-width:68%;}
+.ps .sigbox .in{position:absolute; right:3mm; top:50%; transform:translateY(-50%);
+    width:7mm; height:7mm; border:1px solid #999; border-radius:99px; color:#999;
+    display:flex; align-items:center; justify-content:center; font-size:7px;}
+.ps .buyer{padding:.8mm 1.4mm; font-size:7.9px; line-height:1.55; overflow-wrap:anywhere;}
+.ps .buyer .bn{font-size:11px; font-weight:700; letter-spacing:.2em;}
+.ps .verstamp{margin-top:.8mm; text-align:right; font-size:5.5px; color:#999; letter-spacing:.05em;}
+/* PDF生成中の表示 */
+#pdfStage{position:fixed; left:-10000px; top:0; width:196mm; background:#fff; z-index:-1; pointer-events:none;}
+.b-pdf:disabled{opacity:.6;}
+.pdfinfo{font-size:12.5px; color:#555; line-height:1.6; margin-bottom:12px; word-break:break-all;}
+.pbtn.primary{background:var(--navy); color:#fff; border-color:var(--navy); font-weight:700;}
+.pbtn.primary small{color:#c9d2e4;}
 @media print{
   @page{size:A4 portrait; margin:6mm 7mm;}
   html,body{margin:0 !important; padding:0 !important; height:auto !important;}
   body{background:#fff;}
-  .app,.bar,.panel,#toast{display:none !important;}
-  #printSheet{display:block; font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
-    color:#000; font-size:8.5px; line-height:1.32; width:100%; overflow:hidden;
-    -webkit-print-color-adjust:exact; print-color-adjust:exact;}
-  #printSheet *{box-sizing:border-box;}
-  .ph{display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:1.1mm; gap:2mm;}
-  .ph .no{font-size:8.2px; border-bottom:1px solid #000; min-width:28mm; padding:0 1mm .5mm;}
-  .ph .ttl{font-size:14px; font-weight:700; letter-spacing:.35em; text-align:center; white-space:nowrap;}
-  .ph .r{text-align:right; font-size:8.2px; white-space:nowrap;}
-  .ph .r div{margin-bottom:.6mm;}
-  .amtbox{display:flex; border:1.5px solid #000; margin-bottom:1.2mm; align-items:stretch;}
-  .amtbox .al{background:#e9e9e9; padding:1mm 2.5mm; font-size:9.5px; font-weight:700;
-    letter-spacing:.4em; display:flex; align-items:center; border-right:1.2px solid #000; white-space:nowrap;}
-  .amtbox .av{flex:1 1 auto; min-width:0; display:flex; align-items:center; justify-content:flex-end;
-    font-size:17px; font-weight:700; padding:0 3mm; font-variant-numeric:tabular-nums;}
-  .amtbox .an{display:flex; align-items:flex-end; font-size:7.4px; padding:0 1.5mm 1mm 0; white-space:nowrap;}
-  .cols{display:flex; gap:1.6mm; align-items:flex-start;}
-  .col{flex:1 1 0; width:50%; max-width:50%; min-width:0; overflow:hidden;}
-  .sec-p{border:1px solid #000; margin-bottom:1mm; overflow:hidden;
-    break-inside:avoid; page-break-inside:avoid;}
-  .sec-p .sh{background:#e9e9e9; font-weight:700; padding:.6mm 1.4mm; font-size:8.7px;
-    border-bottom:1px solid #000; display:flex; justify-content:space-between; align-items:center; gap:1mm;}
-  .sec-p .sh .shr{font-weight:400; font-size:7.2px; white-space:nowrap;}
-  .pr{display:flex; border-bottom:1px solid #888; min-height:4mm; align-items:stretch;}
-  .pr:last-child{border-bottom:none;}
-  .pr .lb{background:#f3f3f3; padding:.45mm 1mm; font-size:7.8px; display:flex; align-items:center;
-    flex:0 0 auto; border-right:1px solid #aaa; white-space:nowrap; overflow:hidden;}
-  .pr .vl{padding:.45mm 1mm; display:flex; align-items:center; flex-wrap:wrap;
-    flex:1 1 auto; min-width:0; overflow:hidden; overflow-wrap:anywhere;}
-  .pr .vl.num{justify-content:flex-end; font-variant-numeric:tabular-nums; flex-wrap:nowrap;}
-  .pr .sep{border-right:1px solid #aaa;}
-  .subhead{background:#f3f3f3; font-size:7.3px; padding:.45mm 1.2mm; border-bottom:1px solid #888;}
-  .mkg{display:inline; min-width:0;}
-  .mk{display:inline-block; padding:0 .9mm; margin:0 .2mm; color:#666;
-    border:1px solid transparent; white-space:nowrap;}
-  .mk.on{color:#000; font-weight:700; border:1.2px solid #000; border-radius:99px;}
-  .noteline{padding:.7mm 1.4mm; font-size:7.3px; line-height:1.45; overflow-wrap:anywhere;}
-  .memoarea{min-height:9mm; padding:.8mm 1.4mm; white-space:pre-wrap; overflow-wrap:anywhere;}
-  .sigbox{display:flex; border:1px solid #000; min-height:16mm; overflow:hidden;
-    break-inside:avoid; page-break-inside:avoid;}
-  .sigbox .sl{background:#e9e9e9; writing-mode:vertical-rl; text-align:center; padding:1mm .8mm;
-    font-size:8.4px; font-weight:700; border-right:1px solid #000; letter-spacing:.3em;}
-  .sigbox .sv{flex:1 1 auto; min-width:0; display:flex; align-items:center; padding:1mm 2mm; position:relative;}
-  .sigbox .sv img{max-height:15mm; max-width:68%;}
-  .sigbox .in{position:absolute; right:3mm; top:50%; transform:translateY(-50%);
-    width:7mm; height:7mm; border:1px solid #999; border-radius:99px; color:#999;
-    display:flex; align-items:center; justify-content:center; font-size:7px;}
-  .buyer{padding:.8mm 1.4mm; font-size:7.9px; line-height:1.55; overflow-wrap:anywhere;}
-  .buyer .bn{font-size:11px; font-weight:700; letter-spacing:.2em;}
-  .verstamp{margin-top:.8mm; text-align:right; font-size:5.5px; color:#999; letter-spacing:.05em;}
+  .app,.bar,.panel,#toast,#pdfStage{display:none !important;}
+  #printSheet{display:block;}
 }
 </style>
 </head>
@@ -188,7 +195,7 @@ textarea{resize:vertical; min-height:64px;}
     <div class="brand">J-AUTO ｜ ODATE AKITA</div>
     <h1>車両買取契約書 作成</h1>
     <div class="sub">出張査定先でもスマホで作成 → PDF保存。査定システムからの車両情報引き継ぎ対応。</div>
-    <div class="ver">版数 v2.0（A4レイアウト修正版）</div>
+    <div class="ver">版数 v2.1（iPhone PDF対応版）</div>
   </header>
 
   <div class="notice" id="storageNotice">この環境ではブラウザ保存（端末内保存）が使えません。GitHub Pages 公開後や通常のブラウザで開くと、保存・呼び出し機能が有効になります。</div>
@@ -506,6 +513,7 @@ textarea{resize:vertical; min-height:64px;}
     <button class="pbtn" id="mList">保存した契約書を開く<small>この端末に保存された契約書の一覧</small></button>
     <button class="pbtn" id="mExport">データ書き出し（JSONファイル）<small>バックアップ・他端末への移行用</small></button>
     <button class="pbtn" id="mImport">データ読み込み（JSONファイル）<small>書き出したファイルを取り込み</small></button>
+    <button class="pbtn" id="mPrint">印刷画面からPDF作成（従来方式）<small>PDF作成ボタンがうまく動かないとき用</small></button>
     <button class="pbtn danger" id="mNew">新規作成（入力内容をリセット）</button>
     <button class="pbtn" id="mClose">閉じる</button>
     <input type="file" id="importFile" accept="application/json" style="display:none">
@@ -520,10 +528,20 @@ textarea{resize:vertical; min-height:64px;}
   </div>
 </div>
 
+<div class="panel" id="pdfPanel">
+  <div class="pbody">
+    <h3>PDFができました</h3>
+    <div class="pdfinfo" id="pdfInfo"></div>
+    <button class="pbtn primary" id="pdfShare">共有・保存<small>「ファイルに保存」・AirDrop・LINE・メールなど</small></button>
+    <button class="pbtn" id="pdfDownload">ダウンロード<small>共有メニューが出ない端末・パソコン用</small></button>
+    <button class="pbtn" id="pdfClose">閉じる</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- ══════════ 印刷用シート（Excel契約書レイアウト再現） ══════════ -->
-<div id="printSheet">
+<div id="printSheet" class="ps">
   <div class="ph">
     <div>契約書No. <span class="no" id="p_contractNo" style="display:inline-block"></span></div>
     <div class="ttl">車両買取契約書</div>
@@ -662,7 +680,7 @@ textarea{resize:vertical; min-height:64px;}
       </div>
     </div>
   </div>
-  <div class="verstamp">J-AUTO 買取契約書システム v2.0</div>
+  <div class="verstamp">J-AUTO 買取契約書システム v2.1</div>
 </div>
 
 <script>
@@ -842,11 +860,11 @@ function renderList(){
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 
 /* ── メニュー ── */
-function closePanels(){$("menuPanel").classList.remove("open");$("listPanel").classList.remove("open");}
+function closePanels(){$("menuPanel").classList.remove("open");$("listPanel").classList.remove("open");$("pdfPanel").classList.remove("open");}
 $("btnMenu").addEventListener("click",function(){$("menuPanel").classList.add("open");});
 $("mClose").addEventListener("click",closePanels);
 $("lClose").addEventListener("click",closePanels);
-[$("menuPanel"),$("listPanel")].forEach(function(p){p.addEventListener("click",function(e){if(e.target===p)closePanels();});});
+[$("menuPanel"),$("listPanel"),$("pdfPanel")].forEach(function(p){p.addEventListener("click",function(e){if(e.target===p)closePanels();});});
 $("mList").addEventListener("click",function(){closePanels();renderList();$("listPanel").classList.add("open");});
 $("mNew").addEventListener("click",function(){
   if(!confirm("入力内容をすべてリセットして新規作成しますか？"))return;
@@ -938,14 +956,131 @@ function fillPrint(){
   var im=$("p_sig");
   if(d.signature){im.src=d.signature;im.style.display="block";}else{im.style.display="none";}
 }
-$("btnPdf").addEventListener("click",function(){
+function pdfBaseName(d){
+  return ("買取契約書_"+(d.name||"未記入")+"_"+(d.contractDate||todayISO())).replace(/[\\\/:*?"<>|\s]+/g,"_");
+}
+/* 従来方式：ブラウザの印刷画面からPDF保存（パソコン・Safari用の予備） */
+function printFallback(){
   fillPrint();
   var d=getData();
   var old=document.title;
-  document.title="買取契約書_"+(d.name||"未記入")+"_"+(d.contractDate||todayISO());
-  setTimeout(function(){window.print();document.title=old;},60);
-});
+  document.title=pdfBaseName(d);
+  setTimeout(function(){
+    try{window.print();}catch(e){toast("この画面では印刷機能が使えません");}
+    document.title=old;
+  },60);
+}
 window.addEventListener("beforeprint",fillPrint);
+$("mPrint").addEventListener("click",function(){closePanels();printFallback();});
+
+/* ── PDFファイル直接作成（v2.1）──
+   iPhoneのホーム画面アプリでは window.print() が反応しないため、
+   契約書シートを画像化してPDFファイルを端末上で作成し、共有・保存する。 */
+var PDF_LIBS=[
+  "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
+];
+var libsPromise=null;
+function loadScript(src){
+  return new Promise(function(res,rej){
+    var s=document.createElement("script");
+    s.src=src; s.async=true; s.crossOrigin="anonymous";
+    s.onload=function(){res();};
+    s.onerror=function(){s.remove();rej(new Error("load failed: "+src));};
+    document.head.appendChild(s);
+  });
+}
+function loadPdfLibs(){
+  if(window.html2canvas&&window.jspdf&&window.jspdf.jsPDF)return Promise.resolve();
+  if(!libsPromise){
+    libsPromise=Promise.all(PDF_LIBS.map(loadScript)).catch(function(e){libsPromise=null;throw e;});
+  }
+  return libsPromise;
+}
+function waitImages(root){
+  var imgs=Array.prototype.slice.call(root.querySelectorAll("img"));
+  return Promise.all(imgs.map(function(im){
+    if(im.style.display==="none"||!im.getAttribute("src"))return null;
+    if(im.complete&&im.naturalWidth)return null;
+    return new Promise(function(r){im.onload=im.onerror=function(){r();};setTimeout(r,3000);});
+  }));
+}
+function buildPdf(){
+  fillPrint();
+  var d=getData();
+  return loadPdfLibs().then(function(){
+    var stage=document.createElement("div");
+    stage.id="pdfStage";
+    var sheet=$("printSheet").cloneNode(true);
+    sheet.removeAttribute("id");
+    sheet.querySelectorAll("[id]").forEach(function(e){e.removeAttribute("id");});
+    sheet.style.display="block";
+    /* html2canvasは縦書き未対応のため、署名欄の見出しは1文字ずつ改行して縦に並べる */
+    sheet.querySelectorAll(".sigbox .sl").forEach(function(el){
+      var t=el.textContent.replace(/\s/g,"");
+      el.style.writingMode="horizontal-tb"; el.style.letterSpacing="0"; el.style.lineHeight="1.3";
+      el.style.display="flex"; el.style.alignItems="center"; el.style.justifyContent="center";
+      el.innerHTML=t.split("").map(esc).join("<br>");
+    });
+    stage.appendChild(sheet);
+    document.body.appendChild(stage);
+    function cleanup(){if(stage.parentNode)stage.parentNode.removeChild(stage);}
+    return waitImages(sheet).then(function(){
+      return window.html2canvas(sheet,{scale:2.5,backgroundColor:"#ffffff",logging:false,useCORS:true});
+    }).then(function(canvas){
+      cleanup();
+      var pdf=new window.jspdf.jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+      var mx=7,my=6,aw=210-mx*2,ah=297-my*2;
+      var w=aw,h=canvas.height*aw/canvas.width;
+      if(h>ah){w=w*ah/h;h=ah;}  /* 1枚に収まるよう縮小 */
+      pdf.addImage(canvas.toDataURL("image/jpeg",0.95),"JPEG",mx+(aw-w)/2,my,w,h);
+      var name=pdfBaseName(d);
+      pdf.setProperties({title:name,creator:"J-AUTO 買取契約書システム v2.1"});
+      return {blob:pdf.output("blob"),name:name+".pdf"};
+    },function(e){cleanup();throw e;});
+  });
+}
+var lastPdf=null;
+function downloadPdf(p){
+  var url=URL.createObjectURL(p.blob);
+  var a=document.createElement("a");
+  a.href=url; a.download=p.name; a.rel="noopener";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){URL.revokeObjectURL(url);},60000);
+}
+function sharePdf(p){
+  var file=null;
+  try{file=new File([p.blob],p.name,{type:"application/pdf"});}catch(e){}
+  if(file&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({files:[file],title:p.name.replace(/\.pdf$/,"")}).catch(function(e){
+      if(e&&e.name==="AbortError")return;   /* 共有メニューを閉じただけ */
+      downloadPdf(p);
+    });
+  }else{
+    downloadPdf(p);
+  }
+}
+$("btnPdf").addEventListener("click",function(){
+  var btn=this;
+  if(btn.disabled)return;
+  btn.disabled=true; btn.textContent="作成中…";
+  buildPdf().then(function(p){
+    lastPdf=p;
+    $("pdfInfo").textContent=p.name+"（"+Math.max(1,Math.round(p.blob.size/1024))+"KB）";
+    closePanels();
+    $("pdfPanel").classList.add("open");
+  }).catch(function(e){
+    if(window.console)console.error(e);
+    if(!(window.html2canvas&&window.jspdf)){
+      toast("通信できずPDFを作れません。電波の良い場所で再度お試しください");
+    }else{
+      toast("PDF作成に失敗しました。メニューの「従来方式」をお試しください");
+    }
+  }).then(function(){btn.disabled=false; btn.textContent="PDF作成";});
+});
+$("pdfShare").addEventListener("click",function(){if(lastPdf)sharePdf(lastPdf);});
+$("pdfDownload").addEventListener("click",function(){if(lastPdf)downloadPdf(lastPdf);});
+$("pdfClose").addEventListener("click",closePanels);
 
 /* ── 初期化 ── */
 function todayISO(){var t=new Date();return t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2);}
@@ -957,6 +1092,8 @@ if(!urlHit&&storageOK){
 }
 if(!$("contractDate").value){$("contractDate").value=todayISO();}
 calc();
+/* PDF用ライブラリを先に読み込んでおく（電波のあるうちに準備・失敗しても動作に影響なし） */
+setTimeout(function(){loadPdfLibs().catch(function(){});},1500);
 })();
 </script>
 </body>
