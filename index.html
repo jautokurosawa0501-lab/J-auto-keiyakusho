@@ -111,6 +111,17 @@ textarea{resize:vertical; min-height:64px;}
 .slist .meta{flex:1; min-width:0;}
 .slist .meta .t{font-size:13.5px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .slist .meta .d{font-size:11px; color:#7a7f8a;}
+.slist .item.cur{border-color:var(--gold); background:#fffaf0;}
+.slist .item .curtag{display:inline-block; font-size:10px; background:var(--gold); color:#fff; border-radius:99px; padding:1px 7px; margin-right:5px; vertical-align:1px;}
+.lsearch{width:100%; font-size:16px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; margin-bottom:10px; font-family:inherit;}
+.curinfo{display:flex; align-items:center; justify-content:space-between; gap:8px; background:#fff; border:1px solid var(--line);
+  border-left:4px solid var(--gold); border-radius:8px; padding:8px 10px; margin-bottom:12px; font-size:12.5px;}
+.curinfo b{color:var(--navy);}
+.curinfo .st{font-size:11px; color:#7a7f8a; white-space:nowrap;}
+.kobutsu-ok{background:#e8f0e8; border:1px solid #7fa87f; color:#2c4a2c; border-radius:8px; padding:8px 10px; font-size:12px; line-height:1.6; margin-top:8px;}
+.kobutsu-ng{background:#fdecea; border:1px solid #e0a49a; color:#7a2d22; border-radius:8px; padding:8px 10px; font-size:12px; line-height:1.6; margin-top:8px;}
+.ps .kbadge{display:inline-block; border:1.4px solid #000; border-radius:2px; padding:0 1.6mm; font-weight:700; font-size:8px; letter-spacing:.08em; white-space:nowrap;}
+.ps .kbadge.ng{border-style:dashed;}
 .slist button{border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 10px;
   font-size:12.5px; font-family:inherit; cursor:pointer;}
 .slist .open-b{background:var(--navy); color:#fff; border-color:var(--navy);}
@@ -205,11 +216,12 @@ textarea{resize:vertical; min-height:64px;}
     <div class="brand">J-AUTO ｜ ODATE AKITA</div>
     <h1>車両買取契約書 作成</h1>
     <div class="sub">出張査定先でもスマホで作成 → PDF保存。査定システムからの車両情報引き継ぎ対応。</div>
-    <div class="ver">版数 v2.2（A4フル印刷版）</div>
+    <div class="ver">版数 v2.3（個別保存・インボイス確認対応）</div>
   </header>
 
   <div class="notice" id="storageNotice">この環境ではブラウザ保存（端末内保存）が使えません。GitHub Pages 公開後や通常のブラウザで開くと、保存・呼び出し機能が有効になります。</div>
   <div class="linknotice" id="linkNotice">✓ 査定システムから車両情報を引き継ぎました。内容をご確認ください。</div>
+  <div class="curinfo" id="curInfo"><span id="curText">新規の契約書（未保存）</span><span class="st" id="curStat"></span></div>
 
   <section class="sec">
     <h2>基本情報</h2>
@@ -298,9 +310,21 @@ textarea{resize:vertical; min-height:64px;}
         <div class="f"><label>携帯</label><input type="tel" id="telMobile"></div>
       </div>
       <div class="row">
-        <div class="f"><label>免許証番号</label><input type="text" id="license"></div>
         <div class="f"><label>職業</label><input type="text" id="job"></div>
       </div>
+      <div class="chipline"><span class="cl">本人確認書類 <b>*</b></span>
+        <div class="chips" data-group="idDoc">
+          <button type="button" class="chip" data-value="license">運転免許証</button>
+          <button type="button" class="chip" data-value="mynumber">マイナンバーカード</button>
+          <button type="button" class="chip" data-value="passport">パスポート</button>
+          <button type="button" class="chip" data-value="other">その他</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="f"><label>確認書類の番号</label><input type="text" id="license"></div>
+        <div class="f"><label>その他の書類名</label><input type="text" id="idDocOther"></div>
+      </div>
+      <div class="hint">古物営業法の本人確認の記録です。実際に提示を受けた書類を選んでください。</div>
       <div class="row">
         <div class="f"><label>勤務先</label><input type="text" id="employer"></div>
         <div class="f"><label>勤務先TEL</label><input type="tel" id="telWork"></div>
@@ -309,6 +333,22 @@ textarea{resize:vertical; min-height:64px;}
         <div class="f"><label>部署</label><input type="text" id="dept"></div>
         <div class="f"><label>役職</label><input type="text" id="position"></div>
       </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>インボイス・古物商特例 <small>売主に確認</small></h2>
+    <div class="bd">
+      <div class="chipline"><span class="cl">売主のインボイス登録 <b>*</b></span>
+        <div class="chips" data-group="invoiceReg">
+          <button type="button" class="chip" data-value="none">登録なし</button>
+          <button type="button" class="chip warnchip" data-value="yes">登録あり</button>
+        </div>
+      </div>
+      <div class="row" id="invoiceNoRow" style="display:none">
+        <div class="f w2"><label>売主の登録番号（T＋13桁）</label><input type="text" id="invoiceNo" inputmode="text" autocapitalize="characters"></div>
+      </div>
+      <div id="kobutsuMsg" class="hint">売主が適格請求書発行事業者（インボイス登録事業者）かどうかを確認して選んでください。個人のお客様でも念のため確認します。</div>
     </div>
   </section>
 
@@ -520,7 +560,8 @@ textarea{resize:vertical; min-height:64px;}
 <div class="panel" id="menuPanel">
   <div class="pbody">
     <h3>メニュー</h3>
-    <button class="pbtn" id="mList">保存した契約書を開く<small>この端末に保存された契約書の一覧</small></button>
+    <button class="pbtn" id="mList">保存した契約書を開く<small>この端末に保存された契約書の一覧（1件ずつ保存）</small></button>
+    <button class="pbtn" id="mSaveAs">別の契約書として保存<small>今の内容をコピーして新しい契約書として保存（元の契約書はそのまま）</small></button>
     <button class="pbtn" id="mExport">データ書き出し（JSONファイル）<small>バックアップ・他端末への移行用</small></button>
     <button class="pbtn" id="mImport">データ読み込み（JSONファイル）<small>書き出したファイルを取り込み</small></button>
     <button class="pbtn" id="mPrint">印刷画面からPDF作成（従来方式）<small>PDF作成ボタンがうまく動かないとき用</small></button>
@@ -533,6 +574,7 @@ textarea{resize:vertical; min-height:64px;}
 <div class="panel" id="listPanel">
   <div class="pbody">
     <h3>保存した契約書</h3>
+    <input type="search" class="lsearch" id="listSearch" placeholder="お名前・車名・契約書No.で絞り込み">
     <div class="slist" id="savedList"></div>
     <button class="pbtn" id="lClose">閉じる</button>
   </div>
@@ -577,7 +619,8 @@ textarea{resize:vertical; min-height:64px;}
         <div class="pr"><div class="lb" style="width:17mm">生年月日</div><div class="vl sep" id="p_birth"></div><div class="lb">年齢</div><div class="vl" id="p_age" style="flex:0 0 13mm"></div></div>
         <div class="pr"><div class="lb" style="width:17mm">住所</div><div class="vl" id="p_address"></div></div>
         <div class="pr"><div class="lb" style="width:17mm">自宅TEL</div><div class="vl sep" id="p_telHome"></div><div class="lb">携帯</div><div class="vl" id="p_telMobile"></div></div>
-        <div class="pr"><div class="lb" style="width:17mm">免許証番号</div><div class="vl sep" id="p_license"></div><div class="lb">職業</div><div class="vl" id="p_job"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">確認書類番号</div><div class="vl sep" id="p_license"></div><div class="lb">職業</div><div class="vl" id="p_job"></div></div>
+        <div class="pr"><div class="lb" style="width:17mm">本人確認</div><div class="vl" id="p_idDoc" style="font-size:7.4px"></div></div>
         <div class="pr"><div class="lb" style="width:17mm">勤務先</div><div class="vl sep" id="p_employer"></div><div class="lb">TEL</div><div class="vl" id="p_telWork"></div></div>
         <div class="pr"><div class="lb" style="width:17mm">部署</div><div class="vl sep" id="p_dept"></div><div class="lb">役職</div><div class="vl" id="p_position"></div></div>
         <div class="subhead">所有者（※売主と所有者が異なる場合に記載）</div>
@@ -665,6 +708,12 @@ textarea{resize:vertical; min-height:64px;}
       </div>
 
       <div class="sec-p">
+        <div class="sh"><span>◼︎売主のインボイス登録</span><span class="shr" id="p_kobutsu"></span></div>
+        <div class="pr"><div class="vl" id="p_invoiceReg" style="font-size:7.6px"></div></div>
+        <div class="pr"><div class="lb" style="width:22mm">登録番号</div><div class="vl" id="p_invoiceNo"></div></div>
+      </div>
+
+      <div class="sec-p">
         <div class="noteline">契約金額はご売却車両と名義変更に必要な書類がいずれも揃ってお引き渡しを受けてから金融機関の営業日3日以内に振り込みを行います。尚、事前に取り交わしがある場合はその条件に従います。また車両引渡については、書類引渡が確実に行われることを確認したことを条件に行い、不備がある場合は、協議の上、車両引渡および支払日を変更する場合がございます。</div>
       </div>
 
@@ -681,7 +730,7 @@ textarea{resize:vertical; min-height:64px;}
       </div>
 
       <div class="sec-p">
-        <div class="noteline">私は左記枠内、および別紙にて交付された契約約款の説明を受け、確認し、承諾のうえ、契約書および契約約款を受領しました。又、私は反社会勢力に該当しないことを表明保証致します。リサイクル預託金相当額についても説明を受け、承諾のうえ契約します。</div>
+        <div class="noteline">私は左記枠内、および別紙にて交付された契約約款の説明を受け、確認し、承諾のうえ、契約書および契約約款を受領しました。又、私は反社会勢力に該当しないことを表明保証致します。リサイクル預託金相当額についても説明を受け、承諾のうえ契約します。なお、本書記載の本人確認書類および適格請求書発行事業者の登録の有無に相違ないことを申告します。</div>
       </div>
 
       <div class="sigbox">
@@ -690,7 +739,7 @@ textarea{resize:vertical; min-height:64px;}
       </div>
     </div>
   </div>
-  <div class="verstamp">J-AUTO 買取契約書システム v2.2</div>
+  <div class="verstamp">J-AUTO 買取契約書システム v2.3</div>
 </div>
 
 <script>
@@ -718,8 +767,8 @@ function wareki(iso){ /* YYYY-MM-DD → 和暦表記 */
 }
 
 /* ── フィールド定義 ── */
-var TEXT_IDS=["contractNo","contractDate","customerNo","maker","car","cc","grade","firstReg","shaken","km","color","katashiki","typeNo","ruibetsu","regNo","frameNo","amount","payTax","payZansai","payMaebarai","payShitadori","payLease","recycleFee","kanaName","name","birth","age","zip","address","telHome","telMobile","license","job","employer","telWork","dept","position","ownerName","ownerRel","ownerAddr","userName","userAddr","bankName","branch","branchCode","acctNo","yuchoMark","acctKana","acctHolder","naviNote","cfDefect","dateVehicle","dateDocs","datePay","place","memo","staff"];
-var GROUPS=["bankType","acctType","eqAudio","eqWheel","eqNavi","recycleStatus","cfParking","cfMeterRollback","cfMeterSwap","cfFlood","cfHail","cfRepair","cfModify","incAutoTax","incJibaiseki","incWeightTax"];
+var TEXT_IDS=["contractNo","contractDate","customerNo","maker","car","cc","grade","firstReg","shaken","km","color","katashiki","typeNo","ruibetsu","regNo","frameNo","amount","payTax","payZansai","payMaebarai","payShitadori","payLease","recycleFee","kanaName","name","birth","age","zip","address","telHome","telMobile","license","job","employer","telWork","dept","position","ownerName","ownerRel","ownerAddr","userName","userAddr","bankName","branch","branchCode","acctNo","yuchoMark","acctKana","acctHolder","naviNote","cfDefect","dateVehicle","dateDocs","datePay","place","memo","staff","idDocOther","invoiceNo"];
+var GROUPS=["idDoc","invoiceReg","bankType","acctType","eqAudio","eqWheel","eqNavi","recycleStatus","cfParking","cfMeterRollback","cfMeterSwap","cfFlood","cfHail","cfRepair","cfModify","incAutoTax","incJibaiseki","incWeightTax"];
 var CHECKS=["eqTire","eqWarranty","eqRecord","eqManual","eqSpareKey","eqDrareco"];
 
 /* ── チップ操作（もう一度タップで解除可） ── */
@@ -729,12 +778,20 @@ document.querySelectorAll(".chips[data-group]").forEach(function(g){
     var was=b.classList.contains("on");
     g.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
     if(!was)b.classList.add("on");
+    if(g.getAttribute("data-group")==="invoiceReg")updateKobutsuUI();
     scheduleDraft();
   });
 });
 document.querySelectorAll(".chip[data-check]").forEach(function(b){
   b.addEventListener("click",function(){b.classList.toggle("on");scheduleDraft();});
 });
+function updateKobutsuUI(){
+  var v=getGroup("invoiceReg"), m=$("kobutsuMsg");
+  $("invoiceNoRow").style.display=(v==="yes")?"flex":"none";
+  if(v==="none"){m.className="kobutsu-ok";m.textContent="✓ 古物商特例の対象です。契約書に「古物商特例対象」と表示されます（仕入帳簿にも特例対象である旨の記載が必要です）。";}
+  else if(v==="yes"){m.className="kobutsu-ng";m.textContent="⚠ 登録ありの売主からの仕入れは古物商特例の対象外です。売主から適格請求書（インボイス）を受け取ってください。";}
+  else{m.className="hint";m.textContent="売主が適格請求書発行事業者（インボイス登録事業者）かどうかを確認して選んでください。個人のお客様でも念のため確認します。";}
+}
 function getGroup(name){
   var g=document.querySelector('.chips[data-group="'+name+'"]');
   var on=g?g.querySelector(".chip.on"):null;
@@ -778,6 +835,7 @@ function setData(d){
   CHECKS.forEach(function(c){setCheck(c,!!d[c]);});
   if(d.staff===undefined||d.staff===""){$("staff").value="黒沢　勇貴";}
   if(d.place===undefined||d.place===""){$("place").value="ご指定場所でのお引渡し";}
+  updateKobutsuUI();
   sigClearFn();
   if(d.signature){var img=new Image();img.onload=function(){sigCtx.drawImage(img,0,0,sigCanvas.width/DPR,sigCanvas.height/DPR);sigHasInk=true;};img.src=d.signature;}
   calc();
@@ -838,35 +896,100 @@ function makeTitle(d){
   var t=[d.name||"（お名前未入力）",(d.maker||"")+(d.car?" "+d.car:"")].filter(Boolean).join("　");
   return t||"無題の契約書";
 }
-$("btnSave").addEventListener("click",function(){
-  if(!storageOK){toast("この環境では保存できません（公開後は可）");return;}
-  var d=getData();
+/* ── 1件ずつ保存（v2.3）──
+   契約書ごとに内部IDを持たせ、開いた契約書は同じ記録を更新、新規は別の記録として保存する。
+   （以前の保存データもそのまま開いて更新できる） */
+var KEY_CUR="jauto_kaitori_current_v1";
+var currentId=null;
+function newRecId(){return "rec_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);}
+function setCurrent(id){
+  currentId=id||null;
+  if(storageOK){ if(currentId)sSet(KEY_CUR,currentId); else {try{localStorage.removeItem(KEY_CUR);}catch(e){}} }
+  updateCurInfo();
+}
+function fmtDT(iso){var dt=new Date(iso);if(isNaN(dt))return "";return dt.getFullYear()+"/"+(dt.getMonth()+1)+"/"+dt.getDate()+" "+("0"+dt.getHours()).slice(-2)+":"+("0"+dt.getMinutes()).slice(-2);}
+function updateCurInfo(){
+  var rec=currentId?loadList().find(function(x){return x.id===currentId;}):null;
+  if(rec){
+    $("curText").innerHTML="編集中：<b></b>";
+    $("curText").querySelector("b").textContent=(rec.data&&rec.data.contractNo?"No."+rec.data.contractNo+"　":"")+rec.title;
+    $("curStat").textContent="保存 "+fmtDT(rec.savedAt);
+  }else{
+    $("curText").textContent="新規の契約書（未保存）";
+    $("curStat").textContent="";
+  }
+}
+/* 契約書No.の自動採番：K＋年月(YYMM)＋連番 例）K2610-001 */
+function nextContractNo(list){
+  var t=new Date(), pre="K"+String(t.getFullYear()).slice(-2)+("0"+(t.getMonth()+1)).slice(-2)+"-", mx=0;
+  list.forEach(function(r){var no=r.data&&r.data.contractNo||"";if(no.indexOf(pre)===0){var n=parseInt(no.slice(pre.length),10);if(n>mx)mx=n;}});
+  return pre+("00"+(mx+1)).slice(-3);
+}
+function saveCurrent(opt){
+  opt=opt||{};
+  if(!storageOK){if(!opt.silent)toast("この環境では保存できません（公開後は可）");return false;}
   var list=loadList();
-  var id=d.contractNo||("auto_"+Date.now());
+  if(!$("contractNo").value.trim()){$("contractNo").value=nextContractNo(list);}
+  var d=getData();
+  var id=(opt.asNew||!currentId)?newRecId():currentId;
+  var dup=list.find(function(x){return x.id!==id&&x.data&&x.data.contractNo&&x.data.contractNo===d.contractNo;});
+  if(dup&&!opt.silent){
+    if(!confirm("契約書No.「"+d.contractNo+"」は別の契約書（"+dup.title+"）でも使われています。\nこのまま保存しますか？\n（キャンセルすると契約書No.を新しく振り直します）")){
+      $("contractNo").value=nextContractNo(list); d=getData();
+    }
+  }
   var idx=list.findIndex(function(x){return x.id===id;});
   var rec={id:id,savedAt:new Date().toISOString(),title:makeTitle(d),data:d};
-  if(idx>=0){list[idx]=rec;}else{list.unshift(rec);}
-  if(saveList(list)){toast("保存しました（"+rec.title+"）");}else{toast("保存に失敗しました（容量不足の可能性）");}
+  if(idx>=0){list.splice(idx,1);}
+  list.unshift(rec);   /* 最新の保存を一覧の先頭に */
+  if(saveList(list)){
+    setCurrent(id);
+    sSet(KEY_DRAFT,JSON.stringify(d));
+    if(!opt.silent||opt.notify)toast((opt.asNew?"別の契約書として保存しました":"保存しました")+"（No."+d.contractNo+"）");
+    return true;
+  }
+  toast("保存に失敗しました（容量不足の可能性）");
+  return false;
+}
+$("btnSave").addEventListener("click",function(){saveCurrent();});
+$("mSaveAs").addEventListener("click",function(){
+  closePanels();
+  if(!confirm("今の内容を、新しい契約書として別に保存しますか？\n（契約書No.は新しく振り直します。元の契約書はそのまま残ります）"))return;
+  $("contractNo").value=nextContractNo(loadList());
+  saveCurrent({asNew:true});
 });
 function renderList(){
   var wrap=$("savedList");wrap.innerHTML="";
-  var list=loadList();
+  var q=($("listSearch").value||"").trim().toLowerCase();
+  var list=loadList().slice().sort(function(a,b){return String(b.savedAt).localeCompare(String(a.savedAt));});
   if(!list.length){wrap.innerHTML='<div class="empty">保存された契約書はまだありません</div>';return;}
+  var shown=0;
   list.forEach(function(rec){
-    var el=document.createElement("div");el.className="item";
-    var dt=new Date(rec.savedAt);
-    var ds=dt.getFullYear()+"/"+(dt.getMonth()+1)+"/"+dt.getDate()+" "+("0"+dt.getHours()).slice(-2)+":"+("0"+dt.getMinutes()).slice(-2);
-    el.innerHTML='<div class="meta"><div class="t"></div><div class="d">No.'+esc(rec.id)+'　保存: '+ds+'</div></div>'+
+    var d=rec.data||{};
+    var hay=[rec.title,d.contractNo,d.name,d.kanaName,d.maker,d.car,d.regNo].join(" ").toLowerCase();
+    if(q&&hay.indexOf(q)<0)return;
+    shown++;
+    var el=document.createElement("div");el.className="item"+(rec.id===currentId?" cur":"");
+    el.innerHTML='<div class="meta"><div class="t"></div><div class="d"></div></div>'+
       '<button class="open-b">開く</button><button class="del-b">削除</button>';
-    el.querySelector(".t").textContent=rec.title;
-    el.querySelector(".open-b").addEventListener("click",function(){setData(rec.data);closePanels();toast("読み込みました");});
+    var t=el.querySelector(".t");
+    if(rec.id===currentId){var tg=document.createElement("span");tg.className="curtag";tg.textContent="編集中";t.appendChild(tg);}
+    t.appendChild(document.createTextNode(rec.title));
+    el.querySelector(".d").textContent="No."+(d.contractNo||"—")+"　契約日 "+(d.contractDate||"—")+"　保存 "+fmtDT(rec.savedAt);
+    el.querySelector(".open-b").addEventListener("click",function(){
+      setData(rec.data);setCurrent(rec.id);sSet(KEY_DRAFT,JSON.stringify(rec.data));closePanels();toast("読み込みました（No."+(d.contractNo||"—")+"）");
+    });
     el.querySelector(".del-b").addEventListener("click",function(){
-      if(!confirm("「"+rec.title+"」を削除しますか？"))return;
-      var l=loadList().filter(function(x){return x.id!==rec.id;});saveList(l);renderList();
+      if(!confirm("「"+rec.title+"」（No."+(d.contractNo||"—")+"）を削除しますか？"))return;
+      var l=loadList().filter(function(x){return x.id!==rec.id;});saveList(l);
+      if(rec.id===currentId)setCurrent(null);
+      renderList();
     });
     wrap.appendChild(el);
   });
+  if(!shown)wrap.innerHTML='<div class="empty">該当する契約書がありません</div>';
 }
+$("listSearch").addEventListener("input",renderList);
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 
 /* ── メニュー ── */
@@ -875,10 +998,10 @@ $("btnMenu").addEventListener("click",function(){$("menuPanel").classList.add("o
 $("mClose").addEventListener("click",closePanels);
 $("lClose").addEventListener("click",closePanels);
 [$("menuPanel"),$("listPanel"),$("pdfPanel")].forEach(function(p){p.addEventListener("click",function(e){if(e.target===p)closePanels();});});
-$("mList").addEventListener("click",function(){closePanels();renderList();$("listPanel").classList.add("open");});
+$("mList").addEventListener("click",function(){closePanels();$("listSearch").value="";renderList();$("listPanel").classList.add("open");});
 $("mNew").addEventListener("click",function(){
   if(!confirm("入力内容をすべてリセットして新規作成しますか？"))return;
-  setData({});$("contractDate").value=todayISO();closePanels();toast("新規作成");
+  setData({});setCurrent(null);$("contractDate").value=todayISO();scheduleDraft();closePanels();toast("新規作成");
 });
 $("mExport").addEventListener("click",function(){
   var payload={app:"jauto-kaitori",exportedAt:new Date().toISOString(),current:getData(),saved:loadList()};
@@ -924,6 +1047,11 @@ function fillPrint(){
   T("p_kanaName",d.kanaName);T("p_name",d.name);T("p_birth",d.birth);T("p_age",d.age?d.age+"歳":"");
   T("p_address",(d.zip?"〒"+d.zip+"　":"")+(d.address||""));
   T("p_telHome",d.telHome);T("p_telMobile",d.telMobile);T("p_license",d.license);T("p_job",d.job);
+  $("p_idDoc").innerHTML=mk([["license","運転免許証"],["mynumber","マイナンバーカード"],["passport","パスポート"],["other","その他"]],d.idDoc)+
+    (d.idDoc==="other"&&d.idDocOther?'<span>（'+esc(d.idDocOther)+'）</span>':"");
+  $("p_invoiceReg").innerHTML=mk([["none","登録なし（適格請求書発行事業者ではない）"],["yes","登録あり"]],d.invoiceReg);
+  T("p_invoiceNo",d.invoiceReg==="yes"?d.invoiceNo:"");
+  $("p_kobutsu").innerHTML=d.invoiceReg==="none"?'<span class="kbadge">古物商特例対象</span>':(d.invoiceReg==="yes"?'<span class="kbadge ng">古物商特例対象外</span>':"");
   T("p_employer",d.employer);T("p_telWork",d.telWork);T("p_dept",d.dept);T("p_position",d.position);
   T("p_ownerName",d.ownerName);T("p_ownerRel",d.ownerRel);T("p_ownerAddr",d.ownerAddr);
   T("p_userName",d.userName);T("p_userAddr",d.userAddr);
@@ -1084,7 +1212,7 @@ function buildPdf(){
       if(h>ah){w=w*ah/h;h=ah;}  /* 1枚に収まるよう縮小 */
       pdf.addImage(canvas.toDataURL("image/jpeg",0.95),"JPEG",mx+(aw-w)/2,my,w,h);
       var name=pdfBaseName(d);
-      pdf.setProperties({title:name,creator:"J-AUTO 買取契約書システム v2.2"});
+      pdf.setProperties({title:name,creator:"J-AUTO 買取契約書システム v2.3"});
       return {blob:pdf.output("blob"),name:name+".pdf"};
     },function(e){cleanup();throw e;});
   });
@@ -1115,7 +1243,8 @@ $("btnPdf").addEventListener("click",function(){
   btn.disabled=true; btn.textContent="作成中…";
   buildPdf().then(function(p){
     lastPdf=p;
-    $("pdfInfo").textContent=p.name+"（"+Math.max(1,Math.round(p.blob.size/1024))+"KB）";
+    if(storageOK)saveCurrent({silent:true});   /* PDFを作った契約書は自動で保存 */
+    $("pdfInfo").textContent=p.name+"（"+Math.max(1,Math.round(p.blob.size/1024))+"KB）"+(storageOK?"　※この契約書は端末に保存しました":"");
     closePanels();
     $("pdfPanel").classList.add("open");
   }).catch(function(e){
@@ -1138,7 +1267,11 @@ var urlHit=importFromURL();
 if(!urlHit&&storageOK){
   var draft=sGet(KEY_DRAFT);
   if(draft){try{setData(JSON.parse(draft));}catch(e){}}
+  var cur=sGet(KEY_CUR);
+  if(cur&&loadList().some(function(x){return x.id===cur;}))currentId=cur;
 }
+updateKobutsuUI();
+updateCurInfo();
 if(!$("contractDate").value){$("contractDate").value=todayISO();}
 calc();
 /* PDF用ライブラリを先に読み込んでおく（電波のあるうちに準備・失敗しても動作に影響なし） */
